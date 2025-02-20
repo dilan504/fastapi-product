@@ -2,9 +2,9 @@
 from fastapi import APIRouter, status
 
 from app.db import SessionDep
-from app.task.models import Task
-from app.task.schemas import TaskCreate, TaskUpdate
-from app.task.service import TaskService
+from app.tasks.models import Task
+from app.tasks.schemas import TaskCreate, TaskUpdate
+from app.tasks.service import TaskService
 
 router = APIRouter()
 service = TaskService()

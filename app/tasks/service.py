@@ -2,18 +2,15 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 
 from app.db import SessionDep
-from app.task.models import Task
-from app.task.schemas import TaskCreate, TaskUpdate
-
-
-
+from app.tasks.models import Task
+from app.tasks.schemas import TaskCreate, TaskUpdate
 
 class TaskService:
     no_task:str = "Task doesn't exits"
     # CREATE
     # ----------------------
-    def create_task(self, plan_data: TaskCreate, session: SessionDep):
-        task_db = Task.model_validate(plan_data.model_dump())
+    def create_task(self, item_data: TaskCreate, session: SessionDep):
+        task_db = Task.model_validate(item_data.model_dump())
         session.add(task_db)
         session.commit()
         session.refresh(task_db)
@@ -21,8 +18,8 @@ class TaskService:
 
     # GET ONE
     # ----------------------
-    def get_task(self, plan_id: int, session: SessionDep):
-        task_db = session.get(Task, plan_id)
+    def get_task(self, item_id: int, session: SessionDep):
+        task_db = session.get(Task, item_id)
         if not task_db:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail=self.no_task
@@ -31,14 +28,14 @@ class TaskService:
 
     # UPDATE
     # ----------------------
-    def update_task(self, plan_id: int, plan_data: TaskUpdate, session: SessionDep):
-        task_db = session.get(Task, plan_id)
+    def update_task(self, item_id: int, item_data: TaskUpdate, session: SessionDep):
+        task_db = session.get(Task, item_id)
         if not task_db:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail=self.no_task
             )
-        plan_data_dict = plan_data.model_dump(exclude_unset=True)
-        task_db.sqlmodel_update(plan_data_dict)
+        item_data_dict = item_data.model_dump(exclude_unset=True)
+        task_db.sqlmodel_update(item_data_dict)
         session.add(task_db)
         session.commit()
         session.refresh(task_db)
@@ -51,8 +48,8 @@ class TaskService:
 
     # DELETE
     # ----------------------
-    def delete_task(self, plan_id: int, session: SessionDep):
-        task_db = session.get(Task, plan_id)
+    def delete_task(self, item_id: int, session: SessionDep):
+        task_db = session.get(Task, item_id)
         if not task_db:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail=self.no_task
