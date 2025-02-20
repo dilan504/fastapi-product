@@ -53,7 +53,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[""],  # Prueba con "" temporalmente
+    allow_origins=["*"],  # Prueba con "" temporalmente
     allow_credentials=True,
     allow_methods=["*"],  # Permitir todos los métodos
     allow_headers=["*"],  # Permitir todos los encabezados
